@@ -1,0 +1,2 @@
+insert into Produto (nome, descricao, preco) values ('Console Xbox', 'Xbox Series X de última geração', 499.99);
+insert into Produto (nome, descricao, preco) values ('Console PlayStation', 'PlayStation 5 com incríveis gráficos', 499.99);
