@@ -14,7 +14,7 @@ public class Produto {
 
     @NotBlank(message = "O nome do produto não pode estar em branco")
     private String nome;
-
+    
     private String descricao;
     private double preco;
 
