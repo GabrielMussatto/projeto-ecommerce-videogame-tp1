@@ -4,7 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Produto {
@@ -12,11 +13,14 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O nome do produto não pode estar em branco")
-    private String nome;
-    
-    private String descricao;
+    private String marca;
+    private String modelo;
     private double preco;
+    private String cor;
+
+    @ManyToOne
+    @JoinColumn(name = "fornecedor_id")
+    private Fornecedor fornecedor;
 
     public Long getId() {
         return id;
@@ -26,20 +30,20 @@ public class Produto {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getMarca() {
+        return marca;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getModelo() {
+        return modelo;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
 
     public double getPreco() {
@@ -48,6 +52,22 @@ public class Produto {
 
     public void setPreco(double preco) {
         this.preco = preco;
+    }
+
+    public Fornecedor getFornecedor() {
+        return fornecedor;
+    }
+
+    public void setFornecedor(Fornecedor fornecedor) {
+        this.fornecedor = fornecedor;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
     }
 
 }
