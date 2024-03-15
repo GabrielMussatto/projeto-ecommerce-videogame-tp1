@@ -1,13 +1,8 @@
 package br.unitins.tp1.resource;
 
-import java.util.List;
-
 import br.unitins.tp1.dto.ClienteDTO;
-import br.unitins.tp1.dto.ClienteResponseDTO;
-import br.unitins.tp1.model.Cliente;
-import br.unitins.tp1.repository.ClienteRepository;
+import br.unitins.tp1.service.ClienteService;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -17,6 +12,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,52 +21,46 @@ import jakarta.ws.rs.core.MediaType;
 public class ClienteResource {
     
     @Inject
-    public ClienteRepository clienteRepository;
+    public ClienteService clienteService;
 
     @GET
     @Path("/{id}") 
-    public ClienteResponseDTO findById(@PathParam("id") Long id) {
-        return ClienteResponseDTO.valueOf(clienteRepository.findById(id));
+    public Response findById(@PathParam("id") Long id) {
+        return Response.ok(clienteService.findById(id)).build();
     }
 
     @GET
-    public List<ClienteResponseDTO> findAll() {
-        return clienteRepository.listAll().stream().map(cliente -> ClienteResponseDTO.valueOf(cliente)).toList();
+    public Response findAll() {
+        return Response.ok(clienteService.findAll()).build();
     }
 
+    @GET
+    @Path("/search/nome/{nome}")
+    public Response findByNome(String nome){
+        return Response.ok(clienteService.findByNome(nome)).build();
+    }
+
+    @GET
+    @Path("/emailCliente/{emailCliente}")
+    public Response findByEmailCliente(@PathParam("emailCliente") String email){
+        return Response.ok(clienteService.findByEmailCliente(email)).build();
+    }
     @POST
-    @Transactional 
-    public ClienteResponseDTO create(ClienteDTO dto) {
-        Cliente cliente = new Cliente();
-        cliente.setNome(dto.nome());
-        cliente.setCpf(dto.cpf());
-        cliente.setEmail(dto.email());
-        cliente.setTelefone(dto.telefone());
-        cliente.setEndereco(dto.endereco());
-        cliente.setDataNascimento(dto.dataNascimento());
-
-        clienteRepository.persist(cliente);
-        return ClienteResponseDTO.valueOf(cliente);
+    public Response create(ClienteDTO dto) {
+        return Response.status(Status.CREATED).entity(clienteService.create(dto)).build();
     }
 
-    @PUT
-    @Transactional 
+    @PUT 
     @Path("/{id}")
-    public void update(@PathParam("id") Long id, ClienteDTO dto) {
-        Cliente clienteBanco = clienteRepository.findById(id);
-
-        clienteBanco.setNome(dto.nome());
-        clienteBanco.setCpf(dto.cpf());
-        clienteBanco.setEmail(dto.email());
-        clienteBanco.setTelefone(dto.telefone());
-        clienteBanco.setEndereco(dto.endereco());
-        clienteBanco.setDataNascimento(dto.dataNascimento());
+    public Response update(@PathParam("id") Long id, ClienteDTO dto) {
+        clienteService.update(id, dto);
+        return Response.status(Status.NO_CONTENT).build();
     }
 
-    @DELETE
-    @Transactional 
+    @DELETE 
     @Path("/{id}")
-    public void delete(@PathParam("id") Long id) {
-        clienteRepository.deleteById(id);
+    public Response delete(@PathParam("id") Long id) {
+        clienteService.delete(id);
+        return Response.status(Status.NO_CONTENT).build();
     }
 }

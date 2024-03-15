@@ -11,4 +11,8 @@ public class ProdutoRepository implements PanacheRepository<Produto>{
     public List<Produto> findByMarca(String marca){
         return find("UPPER(marca) LIKE ?1", "%" + marca.toUpperCase() + "%").list();
     }
+
+    public List<Produto> findByModelo(String modelo){
+        return find("UPPER(modelo) LIKE ?1", "%" + modelo.toUpperCase() +  "%").list();
+    }
 }

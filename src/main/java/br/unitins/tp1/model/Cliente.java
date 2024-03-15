@@ -2,6 +2,7 @@ package br.unitins.tp1.model;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,11 +14,15 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length =  200, nullable = false)
     private String nome;
+
+    @Column(length =  15, nullable = false)
+    private String cpf;
+    
     private String email;
     private String telefone;
-    private String endereco;
-    private String cpf;
+    private String endereco;  
     private LocalDate dataNascimento;
     private LocalDate dataCadastro;
 

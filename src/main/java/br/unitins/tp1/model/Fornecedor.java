@@ -2,6 +2,7 @@ package br.unitins.tp1.model;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,11 +15,15 @@ public class Fornecedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 200, nullable = false)
     private String nome;
+    
+    @Column(length = 200, nullable = false)
+    private String cnpj;
+    
     private String telefone;
     private String localLojaFornecedor;
     private String email;
-    private String cnpj;
 
     @OneToMany(mappedBy = "fornecedor")
     private List<Produto> produtos;

@@ -1,5 +1,6 @@
 package br.unitins.tp1.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,8 +14,12 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length =  250, nullable = false)
     private String marca;
+
+    @Column(length = 250, nullable = false)
     private String modelo;
+    
     private double preco;
     private String cor;
 

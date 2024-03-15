@@ -1,7 +1,6 @@
 package br.unitins.tp1.resource;
 
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -11,13 +10,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-
-import java.util.List;
-
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import br.unitins.tp1.dto.ProdutoDTO;
-import br.unitins.tp1.dto.ProdutoResponseDTO;
-import br.unitins.tp1.model.Produto;
-import br.unitins.tp1.repository.ProdutoRepository;
+import br.unitins.tp1.service.ProdutoService;
 
 @Path("/produtos")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,47 +21,47 @@ import br.unitins.tp1.repository.ProdutoRepository;
 public class ProdutoResource {
 
     @Inject
-    ProdutoRepository produtoRepository;
+    public ProdutoService produtoService;
 
     @GET
     @Path("/{id}")
-    public ProdutoResponseDTO findById(@PathParam("id") Long id) {
-        return ProdutoResponseDTO.valueOf(produtoRepository.findById(id));
+    public Response findById(@PathParam("id") Long id) {
+        return Response.ok(produtoService.findById(id)).build();
     }
 
     @GET
-    public List<ProdutoResponseDTO> findAll() {
-        return produtoRepository.listAll().stream().map(produto -> ProdutoResponseDTO.valueOf(produto)).toList();
+    public Response findAll() {
+        return Response.ok(produtoService.findAll()).build();
+    }
+
+    @GET
+    @Path("/search/marca/{marca}")
+    public Response findByMarca(@PathParam("marca") String marca){
+        return Response.ok(produtoService.findByMarca(marca)).build();
+    }
+
+    @GET
+    @Path("/search/modelo/{modelo}")
+    public Response findByModelo(@PathParam("modelo") String modelo){
+        return Response.ok(produtoService.findByModelo(modelo)).build();
     }
 
     @POST
-    @Transactional
-    public ProdutoResponseDTO create(ProdutoDTO dto){
-        Produto produto = new Produto();
-        produto.setMarca(dto.marca());
-        produto.setModelo(dto.modelo());
-        produto.setPreco(dto.preco());
-        produto.setCor(dto.cor());
-        produtoRepository.persist(produto);
-        return ProdutoResponseDTO.valueOf(produto);
+    public Response create(ProdutoDTO dto){
+        return Response.status(Status.CREATED).entity(produtoService.create(dto)).build();
     }
 
     @PUT
-    @Transactional
     @Path("/{id}")
-    public void update(@PathParam("id") Long id, ProdutoDTO dto){
-        Produto produtoBanco = produtoRepository.findById(id);
-
-        produtoBanco.setMarca(dto.marca());
-        produtoBanco.setModelo(dto.modelo());
-        produtoBanco.setPreco(dto.preco());
-        produtoBanco.setCor(dto.cor());
+    public Response update(@PathParam("id") Long id, ProdutoDTO dto){
+        produtoService.update(id, dto);
+        return Response.status(Status.NO_CONTENT).build();
     }
 
     @DELETE
-    @Transactional
     @Path("/{id}")
-    public void delete(@PathParam("id") Long id){
-        produtoRepository.deleteById(id);
+    public Response delete(@PathParam("id") Long id){
+        produtoService.delete(id);
+        return Response.status(Status.NO_CONTENT).build();
     }
 }
